@@ -1,0 +1,69 @@
+networks:
+  web:
+
+services:
+  traefik:
+    image: "traefik:v3.3"
+    container_name: "traefik"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.https.address=:443"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    networks:
+      - web
+      - media
+      - torrent
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    restart: unless-stopped  
+  portainer:
+    image: portainer/portainer-ce:lts
+    container_name: portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    devices:
+      - /dev/dri:/dev/dri
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.portainer.rule=Host(`portainer.${DOMAIN}`)
+      - traefik.http.services.portainer.loadbalancer.server.port=9000
+    restart: unless-stopped
+    networks:
+      - web
+  heimdall:
+    image: linuxserver/heimdall:latest
+    container_name: heimdall
+    environment:
+      - PUID=${HEIMDALL_PUID}
+      - PGID=nogroup
+      - TZ=${TZ}
+    volumes:
+      - /lake/media-server-configs/heimdall/config:/config
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.heimdall.rule=Host(`apps.${DOMAIN}`)
+      - traefik.http.services.heimdall.loadbalancer.server.port=80
+    restart: unless-stopped
+    networks:
+      - web
+
+volumes:
+  portainer_data:
+    driver: local
+
+# If I ever want to try and figure out ssl with portainer again, it'll look something like:
+#- traefik.tcp.routers.portainer.rule='HostSNI(`portainer.${DOMAIN}`)'
+#- traefik.tcp.routers.portainer.tls.passthrough=true
+#- traefik.tcp.routers.portainer.service=portainer-tcp
+#- traefik.tcp.routers.portainer.entrypoints=https
+#- traefik.tcp.services.portainer-tcp.loadbalancer.server.port=9443

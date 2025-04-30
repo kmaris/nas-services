@@ -1,0 +1,123 @@
+networks:
+  media:
+
+services:
+  emby:
+    image: lscr.io/linuxserver/emby:latest
+    container_name: emby
+    environment:
+      - PUID=${EMBY_PUID}
+      - PGID=${MEDIA_PGID}
+      - TZ=${TZ}
+    volumes:
+      - /lake/media-server-configs/emby/config:/config
+      - /lake/media/tv:/data/tvshows
+      - /lake/media/movies:/data/movies
+    devices:
+      - /dev/dri:/dev/dri
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.emby.rule=Host(`emby.${DOMAIN}`)
+      - traefik.http.services.emby.loadbalancer.server.port=8096
+    restart: unless-stopped
+    networks:
+      - media
+      - web
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=${SONARR_PUID}
+      - PGID=${MEDIA_PGID}
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - /lake/media-server-configs/sonarr/config:/config
+      - /lake/media/tv:/tv
+      - /lake/media/torrents/downloads:/downloads
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)
+      - traefik.http.services.sonarr.loadbalancer.server.port=8989
+    networks:
+      - media
+      - web
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=${RADARR_PUID}
+      - PGID=${MEDIA_PGID}
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - /lake/media-server-configs/radarr/config:/config
+      - /lake/media/movies:/movies
+      - /lake/media/torrents/downloads:/downloads
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)
+      - traefik.http.services.radarr.loadbalancer.server.port=7878
+    restart: unless-stopped
+    networks:
+      - media
+      - web
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=${PROWLARR_PUID}
+      - PGID=${MEDIA_PGID}
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - /lake/media-server-configs/prowlarr/config:/config
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)
+      - traefik.http.services.prowlarr.loadbalancer.server.port=9696
+    restart: unless-stopped
+    networks:
+      - media
+      - web
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=${BAZARR_PUID}
+      - PGID=${MEDIA_PGID}
+      - TZ=${TZ}
+      - UMASK=002
+    volumes:
+      - /lake/media-server-configs/bazarr/config:/config
+      - /lake/media/movies:/movies
+      - /lake/media/tv:/tv
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.bazarr.rule=Host(`bazarr.${DOMAIN}`)
+      - traefik.http.services.bazarr.loadbalancer.server.port=6767
+    restart: unless-stopped
+    networks:
+      - media
+      - web
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    environment:
+      - PUID=${READARR_PUID}
+      - PGID=${MEDIA_PGID}
+      - TZ=${TZ}
+      - UMASK=002
+    volumes:
+      - /lake/media-server-configs/readarr/config:/config
+      - /lake/media/books:/books
+      - /lake/media/torrents/downloads:/downloads
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.readarr.rule=Host(`readarr.${DOMAIN}`)
+      - traefik.http.services.readarr.loadbalancer.server.port=8787
+    networks:
+      - media
+      - web

@@ -1,0 +1,45 @@
+networks:
+  torrent:
+
+services:
+  transmission-vpn:
+    container_name: transmission-vpn
+    image: qmcgaw/gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - VPN_SERVICE_PROVIDER=${VPN_PROVIDER}
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
+      - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
+      - PORT_FORWARD_ONLY=on
+      - VPN_PORT_FORWARDING=on
+      - SERVER_COUNTRIES=${VPN_COUNTRIES}
+      - TZ=${TZ}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.transmission.rule=Host(`transmission.${DOMAIN}`)
+      - traefik.http.services.transmission.loadbalancer.server.port=9091
+    networks:
+      - torrent
+      - web
+    ports:
+      - "127.0.0.1:9091:9091"
+      - 51413:51413/tcp
+      - 51413:51413/udp
+  transmission:
+    image: lscr.io/linuxserver/transmission:latest
+    container_name: transmission
+    network_mode: "service:transmission-vpn"
+    environment:
+      - PUID=${TORRENT_PUID}
+      - PGID=${MEDIA_PGID}
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - /lake/media/torrents/downloads:/downloads
+      - /lake/media/torrents/watch:/watch
+      - /lake/media-server-configs/downloader/config:/config
+    restart: unless-stopped

@@ -1,0 +1,7 @@
+# If you don't want any of the service stacks, you can comment them out.
+include:
+  - web/docker-compose.yml
+  - torrent/docker-compose.yml
+  - media-stack/docker-compose.yml
+  - irc/docker-compose.yml
+  - compute/docker-compose.yml
