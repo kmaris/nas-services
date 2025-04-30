@@ -61,4 +61,5 @@ if you bind a container to a host port with docker ufw won't be able to block it
 
 ## Everything works?
 
-Enjoy!
+Enjoy! Setup links to your services in `apps.${DOMAIN}` and make that
+your homepage.
