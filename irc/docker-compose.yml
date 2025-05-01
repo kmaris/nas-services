@@ -5,7 +5,7 @@ services:
     restart: always
     environment:
       - UID=${NAS_USER_PUID}
-      - GID=${NAS_USER_PGID}
+      - GID=nogroup
     network_mode: "service:transmission-vpn"
     labels:
       - "traefik.enable=true"
