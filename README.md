@@ -5,7 +5,7 @@ probably won't work for others without major/minor tweaks to services, etc. A
 media / nas server is a very personal system in my opinion.
 
 There might be README's in the subdirectories, have a look at them as well
-for any specifics or notes or feelings. 
+for any specifics or notes or feelings.
 
 ## Pre-requisites
 
@@ -32,7 +32,7 @@ Media and download services should be in the shared system group (I call mine me
 You'll see in my `docker-compose.yml` files how I lay everything out. But for nearly
 every service there is a `/lake/media-server-configs/<service>` folder for configuration
 storage and that is typically owned by the service user and media group. UMASK 002
-will ensure newly created files are owned and writable by both user a group members
+will ensure newly created files are owned and writable by both user and group members
 which is what we generally need. Not so much for configuration, but for sharing
 files between containers.
 
