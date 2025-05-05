@@ -4,6 +4,7 @@ networks:
 services:
   transmission-vpn:
     container_name: transmission-vpn
+    hostname: transmission-vpn
     image: qmcgaw/gluetun
     cap_add:
       - NET_ADMIN
@@ -28,6 +29,7 @@ services:
       - "127.0.0.1:9091:9091"
       - 51413:51413/tcp
       - 51413:51413/udp
+
   transmission:
     image: lscr.io/linuxserver/transmission:latest
     container_name: transmission

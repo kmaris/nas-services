@@ -5,6 +5,7 @@ services:
   emby:
     image: lscr.io/linuxserver/emby:latest
     container_name: emby
+    hostname: emby
     environment:
       - PUID=${EMBY_PUID}
       - PGID=${MEDIA_PGID}
@@ -23,9 +24,11 @@ services:
     networks:
       - media
       - web
+
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
+    hostname: sonarr
     environment:
       - PUID=${SONARR_PUID}
       - PGID=${MEDIA_PGID}
@@ -43,9 +46,11 @@ services:
     networks:
       - media
       - web
+
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
+    hostname: radarr
     environment:
       - PUID=${RADARR_PUID}
       - PGID=${MEDIA_PGID}
@@ -63,9 +68,11 @@ services:
     networks:
       - media
       - web
+
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
+    hostname: prowlarr
     environment:
       - PUID=${PROWLARR_PUID}
       - PGID=${MEDIA_PGID}
@@ -81,9 +88,11 @@ services:
     networks:
       - media
       - web
+
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
+    hostname: bazarr
     environment:
       - PUID=${BAZARR_PUID}
       - PGID=${MEDIA_PGID}
@@ -101,9 +110,11 @@ services:
     networks:
       - media
       - web
+
   readarr:
     image: lscr.io/linuxserver/readarr:develop
     container_name: readarr
+    hostname: readarr
     environment:
       - PUID=${READARR_PUID}
       - PGID=${MEDIA_PGID}

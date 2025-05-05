@@ -2,6 +2,7 @@ services:
   foldingathome:
     image: linuxserver/foldingathome:latest
     container_name: foldingathome
+    hostname: foldingathome
     environment:
       - PUID=${NAS_USER_PUID}
       - PGID=nogroup
