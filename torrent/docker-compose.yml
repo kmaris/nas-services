@@ -21,8 +21,9 @@ services:
       - TZ=${TZ}
     labels:
       - traefik.enable=true
+      - traefik.port=9091
+      - traefik.docker.network=torrent
       - traefik.http.routers.transmission.rule=Host(`transmission.${DOMAIN}`)
-      - traefik.http.services.transmission.loadbalancer.server.port=9091
     networks:
       - torrent
     ports:
