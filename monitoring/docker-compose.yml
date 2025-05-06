@@ -1,0 +1,83 @@
+networks:
+  monitoring:
+
+services:
+  loki:
+    image: grafana/loki:latest
+    container_name: loki    
+    hostname: loki
+    user: ${LOKI_PUID}
+    volumes:
+      - /lake/monitoring/loki/config:/mnt/config
+    restart: unless-stopped
+    environment:
+      - PUID=${LOKI_PUID}
+      - GUID=nogroup
+    command: -config.file=/mnt/config/loki-config.yaml  
+    networks:
+      - monitoring
+
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
+    hostname: alloy    
+    environment:
+      - PUID=${ALLOY_PUID}
+      - GUID=nogroup
+    volumes:
+      - /var/log:/var/log:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /lake/monitoring/alloy/config/config.alloy:/etc/alloy/config.alloy
+      - /lake/monitoring/alloy/data:/var/lib/alloy/data
+    restart: unless-stopped
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    networks:
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    hostname: prometheus
+    restart: unless-stopped
+    environment:
+      - PUID=${PROMETHEUS_PUID}
+      - GUID=nogroup
+    volumes:
+      - /lake/monitoring/prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --web.enable-remote-write-receiver
+    networks:
+      - monitoring
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=monitoring
+      - traefik.http.routers.prometheus.rule=Host(`prometheus.${DOMAIN}`)
+      - traefik.http.services.prometheus.loadbalancer.server.port=9090
+
+  grafana:
+    image: grafana/grafana:latest    
+    container_name: grafana
+    hostname: grafana
+    restart: unless-stopped    
+    user: ${GRAFANA_PUID}
+    environment:
+      - GF_SERVER_ROOT_URL=http://grafana.${DOMAIN}
+      - PUID=${GRAFANA_PUID}
+      - GUID=nogroup
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_INSTALL_PLUGINS=https://storage.googleapis.com/integration-artifacts/grafana-lokiexplore-app/grafana-lokiexplore-app-latest.zip;grafana-lokiexplore-app
+    volumes:
+      - /lake/monitoring/grafana/data:/var/lib/grafana
+      - /lake/monitoring/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - monitoring
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=monitoring
+      - traefik.http.routers.grafana.rule=Host(`grafana.${DOMAIN}`)
+      - traefik.http.services.grafana.loadbalancer.server.port=3000

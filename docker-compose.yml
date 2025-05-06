@@ -6,3 +6,4 @@ include:
   - irc/docker-compose.yml
   - storage/docker-compose.yml
   - compute/docker-compose.yml
+  - monitoring/docker-compose.yml
