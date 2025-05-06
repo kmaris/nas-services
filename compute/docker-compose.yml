@@ -1,3 +1,6 @@
+networks:
+  compute:
+
 services:
   foldingathome:
     image: linuxserver/foldingathome:latest
