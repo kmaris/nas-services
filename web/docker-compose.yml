@@ -3,7 +3,7 @@ networks:
 
 services:
   traefik:
-    image: "traefik:v3.3"
+    image: traefik:v3.3
     container_name: traefik
     hostname: traefik
     command:
@@ -19,8 +19,10 @@ services:
       - "8080:8080"
     networks:
       - web
-      - media
+      - monitoring
       - torrent
+      - compute
+      - media
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     restart: unless-stopped  
@@ -36,8 +38,8 @@ services:
       - /dev/dri:/dev/dri
     labels:
       - traefik.enable=true
-      - traefik.port=9000
       - traefik.http.routers.portainer.rule=Host(`portainer.${DOMAIN}`)
+      - traefik.http.services.portainer.loadbalancer.server.port=9000
     restart: unless-stopped
     networks:
       - web

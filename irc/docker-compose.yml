@@ -8,8 +8,8 @@ services:
       - GID=nogroup
     network_mode: "service:transmission-vpn"
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.thelounge.rule=Host(`thelounge.${DOMAIN}`)"
-      - "traefik.http.services.thelounge.loadbalancer.server.port=9000"
+      - traefik.enable=true
+      - traefik.http.routers.thelounge.rule=Host(`thelounge.${DOMAIN}`)
+      - traefik.http.services.thelounge.loadbalancer.server.port=9000
     volumes:
       - /lake/thelounge:/var/opt/thelounge
