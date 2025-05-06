@@ -5,3 +5,4 @@ include:
   - media-stack/docker-compose.yml
   - irc/docker-compose.yml
   - compute/docker-compose.yml
+  - monitoring/docker-compose.yml
