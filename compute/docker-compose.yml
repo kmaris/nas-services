@@ -15,4 +15,4 @@ services:
       #- CLI_ARGS= #optional
     volumes:
       - /lake/foldingathome/config:/config
-    restart: unless-stopped
+    restart: no
