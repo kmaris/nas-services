@@ -62,6 +62,25 @@ services:
     networks:
       - web
 
+  kavita:
+    image: lscr.io/linuxserver/kavita:latest
+    container_name: kavita
+    hostname: kavita
+    environment:
+      - PGID=${MEDIA_GUID}
+      - TZ=${TZ}
+    volumes:
+      - /lake/media-server-configs/kavita/config:/config
+      - /lake/media/books:/books
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.kavita.rule=Host(`books.${DOMAIN}`)
+      - traefik.http.services.kavita.loadbalancer.server.port=5000
+    restart: unless-stopped
+    networks:
+      - web
+
+
 volumes:
   portainer_data:
     driver: local
