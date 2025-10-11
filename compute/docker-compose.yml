@@ -1,18 +1,18 @@
 networks:
   compute:
 
-services:
-  foldingathome:
-    image: linuxserver/foldingathome:latest
-    container_name: foldingathome
-    hostname: foldingathome
-    environment:
-      - PUID=${NAS_USER_PUID}
-      - PGID=nogroup
-      - TZ=${TZ}
-      - ACCOUNT_TOKEN=${FOLDINGATHOME_TOKEN}
-      - MACHINE_NAME=${FOLDINGATHOME_MACHINE_NAME}
-      #- CLI_ARGS= #optional
-    volumes:
-      - /lake/foldingathome/config:/config
-    restart: no
+#services:
+#  foldingathome:
+#    image: linuxserver/foldingathome:latest
+#    container_name: foldingathome
+#    hostname: foldingathome
+#    environment:
+#      - PUID=${NAS_USER_PUID}
+#      - PGID=nogroup
+#      - TZ=${TZ}
+#      - ACCOUNT_TOKEN=${FOLDINGATHOME_TOKEN}
+#      - MACHINE_NAME=${FOLDINGATHOME_MACHINE_NAME}
+#      #- CLI_ARGS= #optional
+#    volumes:
+#      - /lake/foldingathome/config:/config
+#    restart: no
