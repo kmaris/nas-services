@@ -129,25 +129,3 @@ services:
     restart: unless-stopped
     networks:
       - media
-
-  readarr:
-    image: lscr.io/linuxserver/readarr:develop
-    container_name: readarr
-    hostname: readarr
-    environment:
-      - PUID=${READARR_PUID}
-      - PGID=${MEDIA_PGID}
-      - TZ=${TZ}
-      - UMASK=002
-    volumes:
-      - /lake/media-server-configs/readarr/config:/config
-      - /lake/media/books:/books
-      - /lake/media/torrents/downloads:/downloads
-    restart: unless-stopped
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=media
-      - traefik.http.routers.readarr.rule=Host(`readarr.${DOMAIN}`)
-      - traefik.http.services.readarr.loadbalancer.server.port=8787
-    networks:
-      - media
