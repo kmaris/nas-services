@@ -18,6 +18,7 @@ services:
       - PORT_FORWARD_ONLY=on
       - VPN_PORT_FORWARDING=on
       - SERVER_COUNTRIES=${VPN_COUNTRIES}
+      - UPDATER_PERIOD=12h
       - TZ=${TZ}
     labels:
       - traefik.enable=true
