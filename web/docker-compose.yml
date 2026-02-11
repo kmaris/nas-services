@@ -19,7 +19,7 @@ services:
       - "8080:8080"
     networks:
       - web
-      - torrent
+      - download
       - compute
       - media
       - storage

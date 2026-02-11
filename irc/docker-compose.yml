@@ -6,7 +6,7 @@ services: {}
     #environment:
       #- UID=${NAS_USER_PUID}
       #- GID=nogroup
-    #network_mode: "service:transmission-vpn"
+    #network_mode: "service:gluetun-vpn"
     #labels:
       #- traefik.enable=true
       #- traefik.http.routers.thelounge.rule=Host(`thelounge.${DOMAIN}`)

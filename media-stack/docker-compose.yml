@@ -48,6 +48,26 @@ services:
     networks:
       - media
 
+  sportarr:
+    image: sportarr/sportarr:latest
+    container_name: sportarr
+    environment:
+      - PUID=${SPORTARR_PUID}
+      - PGID=${MEDIA_PGID}
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - /lake/media-server-configs/sportarr/config:/config
+      - /lake/media/sports:/data
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=media
+      - traefik.http.routers.sportarr.rule=Host(`sportarr.${DOMAIN}`)
+      - traefik.http.services.sportarr.loadbalancer.server.port=1867
+    restart: unless-stopped
+    networks:
+      - media
+
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr

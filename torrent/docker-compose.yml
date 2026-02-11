@@ -1,11 +1,11 @@
 networks:
-  torrent:
+  download:
 
 services:
-  transmission-vpn:
-    container_name: transmission-vpn
-    hostname: transmission-vpn
-    image: qmcgaw/gluetun
+  gluetun-vpn:
+    container_name: gluetun-vpn
+    hostname: gluetun-vpn
+    image: "qmcgaw/gluetun:v3.39.1"
     cap_add:
       - NET_ADMIN
     devices:
@@ -22,16 +22,35 @@ services:
       - TZ=${TZ}
     labels:
       - traefik.enable=true
-      - traefik.docker.network=torrent
+      - traefik.docker.network=download
       - traefik.http.routers.transmission.rule=Host(`transmission.${DOMAIN}`)
+      - traefik.http.routers.transmission.service=transmission
       - traefik.http.services.transmission.loadbalancer.server.port=9091
+      - traefik.http.routers.sabnzbd.rule=Host(`sabnzbd.${DOMAIN}`)
+      - traefik.http.routers.sabnzbd.service=sabnzbd
+      - traefik.http.services.sabnzbd.loadbalancer.server.port=8080
     networks:
-      - torrent
+      - download
+
+  sabnzbd:
+    container_name: sabnzbd
+    image: lscr.io/linuxserver/sabnzbd:latest
+    network_mode: "service:gluetun-vpn"
+    environment:
+      - PUID=${TORRENT_PUID}
+      - PGID=${MEDIA_PGID}
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - /lake/media-server-configs/sabnzbd/config:/config
+      - /lake/media/torrents/downloads/incomplete:/incomplete-downloads
+      - /lake/media/torrents/downloads/complete:/downloads
+    restart: unless-stopped
 
   transmission:
     image: lscr.io/linuxserver/transmission:latest
     container_name: transmission
-    network_mode: "service:transmission-vpn"
+    network_mode: "service:gluetun-vpn"
     environment:
       - PUID=${TORRENT_PUID}
       - PGID=${MEDIA_PGID}
@@ -42,3 +61,4 @@ services:
       - /lake/media/torrents/watch:/watch
       - /lake/media-server-configs/downloader/config:/config
     restart: unless-stopped
+
