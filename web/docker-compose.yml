@@ -67,7 +67,7 @@ services:
     container_name: kavita
     hostname: kavita
     environment:
-      - PGID=${MEDIA_GUID}
+      - PGID=${MEDIA_PGID}
       - TZ=${TZ}
     volumes:
       - /lake/media-server-configs/kavita/config:/config
