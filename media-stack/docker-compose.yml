@@ -12,9 +12,7 @@ services:
       - TZ=${TZ}
     volumes:
       - /lake/media-server-configs/emby/config:/config
-      - /lake/media/tv:/data/tvshows
-      - /lake/media/movies:/data/movies
-      - /lake/media/recordings:/data/recordings
+      - /lake/media:/media
     devices:
       - /dev/dri:/dev/dri
     labels:
@@ -37,8 +35,7 @@ services:
       - TZ=${TZ}
     volumes:
       - /lake/media-server-configs/sonarr/config:/config
-      - /lake/media/tv:/tv
-      - /lake/media/torrents/downloads:/downloads
+      - /lake/media:/media
     restart: unless-stopped
     labels:
       - traefik.enable=true
@@ -79,8 +76,9 @@ services:
       - TZ=${TZ}
     volumes:
       - /lake/media-server-configs/radarr/config:/config
-      - /lake/media/movies:/movies
-      - /lake/media/torrents/downloads:/downloads
+      - /lake/media:/media
+      #- /lake/media/movies:/movies
+      #- /lake/media/torrents/downloads:/downloads
     labels:
       - traefik.enable=true
       - traefik.docker.network=media
@@ -139,8 +137,7 @@ services:
       - UMASK=002
     volumes:
       - /lake/media-server-configs/bazarr/config:/config
-      - /lake/media/movies:/movies
-      - /lake/media/tv:/tv
+      - /lake/media:/media
     labels:
       - traefik.enable=true
       - traefik.docker.network=media

@@ -43,8 +43,7 @@ services:
       - TZ=${TZ}
     volumes:
       - /lake/media-server-configs/sabnzbd/config:/config
-      - /lake/media/torrents/downloads/incomplete:/incomplete-downloads
-      - /lake/media/torrents/downloads/complete:/downloads
+      - /lake/media:/media
     restart: unless-stopped
 
   transmission:
@@ -57,8 +56,7 @@ services:
       - UMASK=002
       - TZ=${TZ}
     volumes:
-      - /lake/media/torrents/downloads:/downloads
-      - /lake/media/torrents/watch:/watch
       - /lake/media-server-configs/downloader/config:/config
+      - /lake/media:/media
     restart: unless-stopped
 
