@@ -55,7 +55,7 @@ services:
       - TZ=${TZ}
     volumes:
       - /lake/media-server-configs/sportarr/config:/config
-      - /lake/media/sports:/data
+      - /lake/media:/media
     labels:
       - traefik.enable=true
       - traefik.docker.network=media
