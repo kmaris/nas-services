@@ -5,7 +5,7 @@ services:
   gluetun-vpn:
     container_name: gluetun-vpn
     hostname: gluetun-vpn
-    image: "qmcgaw/gluetun:v3.39.1"
+    image: "qmcgaw/gluetun:latest"
     cap_add:
       - NET_ADMIN
     devices:
