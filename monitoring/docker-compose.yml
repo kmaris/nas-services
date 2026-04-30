@@ -13,7 +13,7 @@ services:
     environment:
       - PUID=${LOKI_PUID}
       - GUID=nogroup
-    command: -config.file=/mnt/config/loki-config.yaml  
+    command: -config.file=/mnt/config/loki-config.yaml
     networks:
       - monitoring
 
@@ -70,6 +70,7 @@ services:
       - PUID=${GRAFANA_PUID}
       - GUID=nogroup
       - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_SECURITY_ADMIN_USER=admin
       - GF_INSTALL_PLUGINS=https://storage.googleapis.com/integration-artifacts/grafana-lokiexplore-app/grafana-lokiexplore-app-latest.zip;grafana-lokiexplore-app
     volumes:
       - /lake/monitoring/grafana/data:/var/lib/grafana
