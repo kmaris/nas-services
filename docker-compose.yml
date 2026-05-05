@@ -3,7 +3,6 @@ include:
   - web/docker-compose.yml
   - torrent/docker-compose.yml
   - media-stack/docker-compose.yml
-  - irc/docker-compose.yml
   - storage/docker-compose.yml
   - compute/docker-compose.yml
   - monitoring/docker-compose.yml
