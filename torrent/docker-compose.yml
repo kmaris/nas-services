@@ -2,9 +2,9 @@ networks:
   download:
 
 services:
-  gluetun-vpn:
-    container_name: gluetun-vpn
-    hostname: gluetun-vpn
+  gluetun:
+    container_name: gluetun
+    hostname: gluetun
     image: "qmcgaw/gluetun:latest"
     cap_add:
       - NET_ADMIN
@@ -35,7 +35,7 @@ services:
   sabnzbd:
     container_name: sabnzbd
     image: lscr.io/linuxserver/sabnzbd:latest
-    network_mode: "service:gluetun-vpn"
+    network_mode: "service:gluetun"
     environment:
       - PUID=${TORRENT_PUID}
       - PGID=${MEDIA_PGID}
@@ -49,7 +49,7 @@ services:
   transmission:
     image: lscr.io/linuxserver/transmission:latest
     container_name: transmission
-    network_mode: "service:gluetun-vpn"
+    network_mode: "service:gluetun"
     environment:
       - PUID=${TORRENT_PUID}
       - PGID=${MEDIA_PGID}
